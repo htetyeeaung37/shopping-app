@@ -3,12 +3,13 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { Mail, Lock, ArrowRight, Loader2, CheckCircle, ShoppingBag, Sparkles } from "lucide-react";
+import { Mail, Lock, ArrowRight, Loader2, CheckCircle, ShoppingBag, Sparkles, Eye, EyeOff } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 
 function LoginContent() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -42,7 +43,7 @@ function LoginContent() {
   const inputClass = `
     w-full h-12 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm
     border border-slate-200 dark:border-slate-700
-    rounded-2xl pl-12 pr-4 outline-none
+    rounded-2xl pl-12 pr-12 outline-none
     focus:ring-2 focus:ring-violet-500 focus:border-transparent
     focus:bg-white dark:focus:bg-slate-800
     transition-all duration-300 text-sm text-slate-900 dark:text-white
@@ -67,7 +68,7 @@ function LoginContent() {
               <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30">
                 <ShoppingBag size={22} className="text-white" />
               </div>
-              Shopify<span className="text-violet-200">.</span>
+              VIBESTORE<span className="text-violet-200">.</span>
             </Link>
           </div>
 
@@ -143,9 +144,6 @@ function LoginContent() {
                 <label className="block text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.15em] transition-colors group-focus-within:text-violet-500">
                   Password
                 </label>
-                {/* <button type="button" className="text-xs font-bold text-violet-600 dark:text-violet-400 hover:text-violet-500 transition-colors">
-                  Forgot password?
-                </button> */}
               </div>
               <div className="relative">
                 <Lock 
@@ -153,12 +151,21 @@ function LoginContent() {
                   size={18} 
                 />
                 <input
-                  type="password" required
+                  type={showPassword ? "text" : "password"} // Password hide/show logic
+                  required
                   placeholder="••••••••"
                   className={inputClass}
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                 />
+                {/* Toggle Button */}
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-violet-500 transition-colors z-20 p-1"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
             </div>
 
@@ -191,7 +198,11 @@ function LoginContent() {
 
 export default function LoginPage() {
   return (
-    <Suspense>
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
+        <Loader2 className="animate-spin text-violet-600" size={40} />
+      </div>
+    }>
       <LoginContent />
     </Suspense>
   );

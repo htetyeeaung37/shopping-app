@@ -2,13 +2,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { User, Mail, Lock, Sparkles, Loader2, ArrowLeft, ShoppingBag, CheckCircle2 } from "lucide-react";
+import { User, Mail, Lock, Sparkles, Loader2, ArrowLeft, ShoppingBag, CheckCircle2, Eye, EyeOff } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
     firstName: '', lastName: '', username: '', email: '', password: ''
   });
+  const [showPassword, setShowPassword] = useState(false); // Password hide/show အတွက် state
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
@@ -43,7 +44,7 @@ export default function RegisterPage() {
   const inputClass = `
     w-full h-12 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm
     border border-slate-200 dark:border-slate-700
-    rounded-2xl pl-12 pr-4 outline-none
+    rounded-2xl pl-12 pr-12 outline-none
     focus:ring-2 focus:ring-violet-500 focus:border-transparent
     focus:bg-white dark:focus:bg-slate-800
     transition-all duration-300 text-sm text-slate-900 dark:text-white
@@ -68,7 +69,7 @@ export default function RegisterPage() {
               <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30">
                 <ShoppingBag size={22} className="text-white" />
               </div>
-              Shopify<span className="text-violet-200">.</span>
+              VIBESTORE<span className="text-violet-200">.</span>
             </Link>
           </div>
 
@@ -197,11 +198,20 @@ export default function RegisterPage() {
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-violet-500 group-focus-within:scale-110 transition-all duration-300 z-10 pointer-events-none" size={16} />
                 <input
-                  type="password" placeholder="min. 6 characters"
+                  type={showPassword ? "text" : "password"} // Password type dynamic ဖြစ်စေရမယ်
+                  placeholder="min. 6 characters"
                   className={inputClass}
                   value={form.password}
                   onChange={e => setForm({ ...form, password: e.target.value })}
                 />
+                {/* Hide/Show Button */}
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-violet-500 transition-colors z-20 p-1"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
             </div>
 
